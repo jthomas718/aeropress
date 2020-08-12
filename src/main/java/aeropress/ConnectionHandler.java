@@ -69,27 +69,4 @@ public class ConnectionHandler implements Runnable {
 		}
 	}
 
-	
-//	private RestController createController() {
-//		RestController controller = new RestController("/");
-//		controller.registerHandler("/:name", HttpMethod.GET, params -> {
-//			return new HttpResponse.Builder()
-//					.status(HttpStatus.OK)
-//					.header("Content-Type", "text/html")
-//					.body(HTML.replace("{}", params.get("name")))
-//					.build();
-//		});
-//		
-//		controller.registerHandler("/api/name/:name", HttpMethod.GET, params -> {
-//			return new HttpResponse.Builder()
-//					.status(HttpStatus.OK)
-//					.header("Content-Type", "text/html")
-//					.body(HTML.replace("{}", String.format("%s! You've reached the API", params.get("name"))))
-//					.build();
-//		});
-//		
-//		
-//		return controller;
-//	}
-
 }
