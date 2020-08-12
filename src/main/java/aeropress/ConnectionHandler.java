@@ -29,8 +29,6 @@ public class ConnectionHandler implements Runnable {
 			HttpRequest request = new HttpRequest(String.valueOf(inputBuffer)); //TODO: check length of the returned string. Is it 1024? message may be truncated.
 			System.out.print(request.toString());
 			routeRequest(request, socket.getOutputStream());
-			reader.close();
-			socket.close();
 		} catch (IOException e) {
 			System.out.println("Connection handler (" + Thread.currentThread().getName() + ") encountered an IO error");
 			e.printStackTrace();
