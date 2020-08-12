@@ -21,9 +21,10 @@ public class ConnectionHandler implements Runnable {
 	@Override
 	public void run() {
 		System.out.println("Connection being handled on thread \"" + Thread.currentThread().getName() + "\"");
+		BufferedReader reader = null;
 		try {
 			char[] inputBuffer = new char[MAX_MESSAGE_BYTES];
-			BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+			reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 			reader.read(inputBuffer);
 			HttpRequest request = new HttpRequest(String.valueOf(inputBuffer)); //TODO: check length of the returned string. Is it 1024? message may be truncated.
 			System.out.print(request.toString());
@@ -33,8 +34,21 @@ public class ConnectionHandler implements Runnable {
 		} catch (IOException e) {
 			System.out.println("Connection handler (" + Thread.currentThread().getName() + ") encountered an IO error");
 			e.printStackTrace();
+		} finally {
+			if (reader != null) {
+				try {
+					reader.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			try {
+				socket.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
-		
+
 	}
 	
 	public void routeRequest(HttpRequest request, OutputStream responseStream) {
