@@ -1,5 +1,7 @@
 package aeropress;
 
+import java.io.IOException;
+
 public class Test {
 	private static final String HTML = 
 			"<!DOCTYPE html>\r\n" +
@@ -9,7 +11,7 @@ public class Test {
 			"</body>\r\n" + 
 			"</html>";
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
 		Aeropress app = Aeropress.builder()
 										.get("/api/:name", params -> {
 											return HttpResponse.builder()
@@ -26,6 +28,6 @@ public class Test {
 										})
 										.build();
 		
-		app.run();
+		app.start(8086);
 	}
 }
