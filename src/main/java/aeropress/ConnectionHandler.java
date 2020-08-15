@@ -49,23 +49,31 @@ public class ConnectionHandler implements Runnable {
 
 	}
 	
-	public void routeRequest(HttpRequest request, OutputStream responseStream) {
+	private void routeRequest(HttpRequest request, OutputStream responseStream) throws IOException {
 		RequestHandler handler = null;
 		for (String pathTemplate : routeMap.keySet()) {
 			PathParser.ParseResult parseResult = PathParser.parse(request.getUrl(), pathTemplate);
 			if (parseResult.matches()) {
 				handler = routeMap.get(pathTemplate);
 				HttpResponse response = handler.handle(parseResult.params());
-				try {
-					responseStream.write(response.getMessage().getBytes());
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+				sendResponse(response, responseStream);
 			}
 		}
 		
 		if (handler == null) {
-			System.out.println("422");
+			sendResponse(HttpResponse.builder()
+					.status(HttpStatus.NOT_FOUND)
+					.body("<h1>404 - Not Found</h1>")
+					.build(),
+					responseStream);
+		}
+	}
+
+	private void sendResponse(HttpResponse response, OutputStream responseStream) throws IOException {
+		try {
+			responseStream.write(response.getMessage().getBytes());
+		} catch(IOException e) {
+			throw new IOException("Unable to write HTTP response to response stream");
 		}
 	}
 
