@@ -29,7 +29,10 @@ This builds the Aeropress app and maps the URL (along with path parameters) to t
 After building, you can start the Aeropress server on any port:
 
 ```Java
-app.start(8080);
+app.start(8086);
 ```
 
-The Aeropress app will listen on the specified port. If no port is specified, the default is port 8080.
+The Aeropress app will listen on the specified port, in this case port 8086. If no port is specified, the default is port 8080.
+
+Navigating the that URL in a browser will yield:
+![image](https://github.com/jthomas718/aeropress/blob/master/assets/example.png)
