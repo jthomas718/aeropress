@@ -35,4 +35,5 @@ app.start(8086);
 The Aeropress app will listen on the specified port, in this case port 8086. If no port is specified, the default is port 8080.
 
 Navigating the that URL in a browser will yield:
+
 ![image](https://github.com/jthomas718/aeropress/blob/master/assets/example.png)
