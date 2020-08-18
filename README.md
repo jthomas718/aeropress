@@ -7,7 +7,7 @@ This is primarily educational in order to further my understanding of web server
 A simple 'hello world' Aeropress app can be built using the Aeropress builder:
 
 ```Java
-String HTML =
+String html =
     "<!DOCTYPE html>\r\n" +
     "<html>\r\n" +
     "<body>\r\n" +
@@ -20,7 +20,7 @@ Aeropress app = Aeropress.builder()
                   return HttpResponse.builder()
                   .status(HttpStatus.OK)
                   .header("Content-Type", "text/html")
-                  .body(HTML.replace("{}", params.get("name")))
+                  .body(html.replace("{}", params.get("name")))
                   .build();
                 })
 ```
