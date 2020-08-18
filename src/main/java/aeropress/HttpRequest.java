@@ -10,19 +10,21 @@ public class HttpRequest {
 	private String url;
 	private String protocolVersion;
 	private String body;
-	
+
+	// TODO: Validate http request and throw exception if not valid. This will allow
+	// connection handler to decide on further actions (such as returning 400 status).
 	public HttpRequest(String rawRequest) {
 		int offset = rawRequest.indexOf(CRLF);
 		int doubleCrlfIndex = rawRequest.indexOf(CRLF + CRLF);
 		
-		/* Parse request line */
+		// Parse request line
 		String requestLine = rawRequest.substring(0, offset);
 		String[] fields = requestLine.split(" ");
 		this.method = HttpMethod.valueOf(fields[0]);
 		this.url = fields[1];
 		this.protocolVersion = fields[2];
 		
-		/* Parse headers */
+		// Parse headers
 		String rawHeaders = rawRequest.substring(offset + 1, doubleCrlfIndex);
 		fields = rawHeaders.split(CRLF);
 		for (String headerField : fields) {
@@ -32,7 +34,7 @@ public class HttpRequest {
 			headers.put(key, value);
 		}
 		
-		/* Parse body */
+		// Parse body
 		this.body = rawRequest.substring(doubleCrlfIndex);
 		if (this.body.isEmpty()) {
 			this.body = null;

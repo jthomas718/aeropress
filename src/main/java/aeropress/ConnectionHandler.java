@@ -72,8 +72,8 @@ public class ConnectionHandler implements Runnable {
 	private void sendResponse(HttpResponse response, OutputStream responseStream) throws IOException {
 		try {
 			responseStream.write(response.getMessage().getBytes());
-		} catch(IOException e) {
-			throw new IOException("Unable to write HTTP response to response stream");
+		} catch (IOException e) {
+			throw new IOException("Unable to write HTTP response to response stream", e);
 		}
 	}
 
