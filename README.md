@@ -23,6 +23,7 @@ Aeropress app = Aeropress.builder()
                   .body(html.replace("{}", params.get("name")))
                   .build();
                 })
+                .build();
 ```
 This builds the Aeropress app and maps the URL (along with path parameters) to the specified handler. The path parameters can be accessed via the 'params' map that's injected into the handler. The HttpResponse class also has a builder for creating immutable HTTP responses. Any responses returned by the handler will be written to the response stream.
 
