@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.util.Map;
+import java.util.Set;
 
 public class ConnectionHandler implements Runnable {
 	private static final int MAX_MESSAGE_BYTES = 1024;
@@ -63,6 +64,7 @@ public class ConnectionHandler implements Runnable {
 				} else {
 					res = HttpResponse.builder()
 							.status(HttpStatus.METHOD_NOT_ALLOWED)
+							.header("Allow", methodsToString(methods.keySet())) // HTTP RFC section 10.4.6 (https://tools.ietf.org/html/rfc2616#section-10.4.6)
 							.body("<h1>405 - Method Not Allowed</h1>")
 							.build();
 				}
@@ -85,6 +87,15 @@ public class ConnectionHandler implements Runnable {
 		} catch (IOException e) {
 			throw new IOException("Unable to write HTTP response to response stream", e);
 		}
+	}
+
+	private static String methodsToString(Set<HttpMethod> methods) {
+		StringBuilder b = new StringBuilder();
+		for (HttpMethod method : methods) {
+			b.append(method.toString()).append(", ");
+		}
+
+		return b.substring(0, b.length() - 2);
 	}
 
 }

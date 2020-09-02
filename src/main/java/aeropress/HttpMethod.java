@@ -2,5 +2,8 @@ package aeropress;
 
 public enum HttpMethod {
 	GET,
-	POST
+	POST,
+	PUT,
+	PATCH,
+	DELETE
 }
