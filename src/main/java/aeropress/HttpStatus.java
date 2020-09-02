@@ -2,7 +2,8 @@ package aeropress;
 
 public enum HttpStatus {
 	OK("Ok", 200),
-	NOT_FOUND("Not Found", 404);
+	NOT_FOUND("Not Found", 404),
+	METHOD_NOT_ALLOWED("Method Not Allowed", 405);
 	
 	private final String text;
 	private final Integer code;

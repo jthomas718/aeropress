@@ -10,12 +10,12 @@ import java.util.Map;
 public class ConnectionHandler implements Runnable {
 	private static final int MAX_MESSAGE_BYTES = 1024;
 	private final Socket socket;
-	private final Map<String, RequestHandler> routeMap;
+	private final Map<String, Map<HttpMethod, RequestHandler>> routes;
 	
-	public ConnectionHandler(Socket socket, Map<String, RequestHandler> routeMap) {
+	public ConnectionHandler(Socket socket, Map<String, Map<HttpMethod, RequestHandler>> routes) {
 		System.out.println("-------- NEW CONNECTION ---------");
 		this.socket = socket;
-		this.routeMap = routeMap;
+		this.routes = routes;
 	}
 	
 	@Override
@@ -50,23 +50,33 @@ public class ConnectionHandler implements Runnable {
 	}
 	
 	private void routeRequest(HttpRequest request, OutputStream responseStream) throws IOException {
-		RequestHandler handler = null;
-		for (String pathTemplate : routeMap.keySet()) {
+		HttpResponse res = null;
+		boolean matched = false;
+		for (String pathTemplate : routes.keySet()) {
 			PathParser.ParseResult parseResult = PathParser.parse(request.getUrl(), pathTemplate);
 			if (parseResult.matches()) {
-				handler = routeMap.get(pathTemplate);
-				HttpResponse response = handler.handle(parseResult.params());
-				sendResponse(response, responseStream);
+				matched = true;
+				Map<HttpMethod, RequestHandler> methods = routes.get(pathTemplate);
+				RequestHandler handler = methods.get(request.getMethod());
+				if (handler != null) {
+					res = handler.handle(request, parseResult.params());
+				} else {
+					res = HttpResponse.builder()
+							.status(HttpStatus.METHOD_NOT_ALLOWED)
+							.body("<h1>405 - Method Not Allowed</h1>")
+							.build();
+				}
 			}
 		}
 		
-		if (handler == null) {
-			sendResponse(HttpResponse.builder()
+		if (!matched) {
+			res = HttpResponse.builder()
 					.status(HttpStatus.NOT_FOUND)
 					.body("<h1>404 - Not Found</h1>")
-					.build(),
-					responseStream);
+					.build();
 		}
+
+		sendResponse(res, responseStream);
 	}
 
 	private void sendResponse(HttpResponse response, OutputStream responseStream) throws IOException {

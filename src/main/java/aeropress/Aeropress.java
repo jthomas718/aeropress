@@ -3,8 +3,7 @@ package aeropress;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -12,7 +11,7 @@ public class Aeropress {
 	private static final int DEFAULT_PORT = 8080;
 	private volatile boolean running = false;
 	private final ExecutorService threadPool = Executors.newCachedThreadPool();
-	private final Map<String, RequestHandler> routeMap = new HashMap<>();
+	private final Map<String, Map<HttpMethod, RequestHandler>> routes = new HashMap<>();
 	
 	private Aeropress() { }
 
@@ -32,15 +31,15 @@ public class Aeropress {
 		running = true;
 		System.out.println(String.format("Server is starting on port %d...", port));
 		ServerSocket serverSocket = new ServerSocket(port);
-		while (running) {
-			Socket clientSocket = serverSocket.accept();
-			threadPool.execute(new ConnectionHandler(clientSocket, routeMap));
-		}
-		serverSocket.close();
+			while (running) {
+				Socket clientSocket = serverSocket.accept();
+				threadPool.execute(new ConnectionHandler(clientSocket, routes));
+			}
 	}
 	
 	private void registerHandler(String pathTemplate, HttpMethod method, RequestHandler handler) {
-		routeMap.put(pathTemplate, handler);
+		Map<HttpMethod, RequestHandler> methods = routes.computeIfAbsent(pathTemplate, k -> new HashMap<>());
+		methods.put(method, handler);
 	}
 	
 	public static Builder builder() {

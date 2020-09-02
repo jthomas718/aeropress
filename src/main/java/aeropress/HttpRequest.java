@@ -6,9 +6,9 @@ import java.util.Map;
 public class HttpRequest {
 	private static final String CRLF = "\r\n";
 	private final Map<String, String> headers = new HashMap<>();
-	private HttpMethod method;
-	private String url;
-	private String protocolVersion;
+	private final HttpMethod method;
+	private final String url;
+	private final String protocolVersion;
 	private String body;
 
 	// TODO: Validate http request and throw exception if not valid. This will allow

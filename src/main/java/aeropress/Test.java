@@ -11,19 +11,32 @@ public class Test {
 			"</body>\r\n" + 
 			"</html>";
 	
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws IOException, InterruptedException {
 		Aeropress app = Aeropress.builder()
-										.get("/api/:name", params -> {
+										.get("/api/:name", (req, pathParams) -> {
 											return HttpResponse.builder()
 											.status(HttpStatus.OK)
 											.header("Content-Type", "text/html")
-											.body(HTML.replace("{}", params.get("name")))
+											.body(HTML.replace("{}", pathParams.get("name")))
 											.build();
 										})
-										.get("/api/:id/test", params -> {
+										.get("/api/:id/test", (req, pathParams) -> {
 											return HttpResponse.builder()
 													.status(HttpStatus.OK)
-													.body(String.format("You got ID #%s", params.get("id")))
+													.body(String.format("You got ID #%s", pathParams.get("id")))
+													.build();
+										})
+										.post("/api", (req, pathParams) -> {
+											return HttpResponse.builder()
+													.status(HttpStatus.OK)
+													.header("Content-Type", "text/html")
+													.body(HTML.replace("{}", req.getBody()))
+													.build();
+										})
+										.get("/api", (req, pathParams) -> {
+											return HttpResponse.builder()
+													.status(HttpStatus.OK)
+													.body("<h1>It's all good!</h1>")
 													.build();
 										})
 										.build();
