@@ -1,7 +1,7 @@
 # aeropress
 A minimalist Java web framework inspired by Express.js for Javascript (https://expressjs.com/).
 
-This is primarily educational in order to further my understanding of web servers. Currently a work in progress.
+Currently a work in progress.
 
 ## Usage
 A simple 'hello world' Aeropress app can be built using the Aeropress builder:
