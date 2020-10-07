@@ -27,9 +27,17 @@ public class ConnectionHandler implements Runnable {
 			char[] inputBuffer = new char[MAX_MESSAGE_BYTES];
 			reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 			reader.read(inputBuffer);
-			HttpRequest request = new HttpRequest(String.valueOf(inputBuffer)); //TODO: check length of the returned string. Is it 1024? message may be truncated.
-			System.out.print(request.toString());
-			routeRequest(request, socket.getOutputStream());
+			try {
+				HttpRequest request = new HttpRequest(String.valueOf(inputBuffer)); //TODO: check length of the returned string. Is it 1024? message may be truncated.
+				System.out.print(request.toString());
+				routeRequest(request, socket.getOutputStream());
+			} catch (ParseException e) {
+				sendResponse(HttpResponse.builder()
+									.status(HttpStatus.BAD_REQUEST)
+									.body("<h1>400 - Bad Request</h1><body>See server logs for more details</body>")
+									.build(),
+							socket.getOutputStream());
+			}
 		} catch (IOException e) {
 			System.out.println("Connection handler (" + Thread.currentThread().getName() + ") encountered an IO error");
 			e.printStackTrace();

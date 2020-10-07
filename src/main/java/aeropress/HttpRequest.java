@@ -11,15 +11,23 @@ public class HttpRequest {
 	private final String protocolVersion;
 	private String body;
 
-	// TODO: Validate http request and throw exception if not valid. This will allow
-	// connection handler to decide on further actions (such as returning 400 status).
-	public HttpRequest(String rawRequest) {
+	public HttpRequest(String rawRequest) throws ParseException {
 		int offset = rawRequest.indexOf(CRLF);
+		if (offset == -1) {
+			throw new ParseException("Request appears to be missing CRLF");
+		}
+
 		int doubleCrlfIndex = rawRequest.indexOf(CRLF + CRLF);
-		
+		if (doubleCrlfIndex == -1) {
+			throw new ParseException("Request is missing double CRLF");
+		}
+
 		// Parse request line
 		String requestLine = rawRequest.substring(0, offset);
 		String[] fields = requestLine.split(" ");
+		if (fields.length < 3) {
+			throw new ParseException("Expected 3 fields in request line of the form 'method url protocol-version' and only found " + fields.length + " fields");
+		}
 		this.method = HttpMethod.valueOf(fields[0]);
 		this.url = fields[1];
 		this.protocolVersion = fields[2];
@@ -35,11 +43,9 @@ public class HttpRequest {
 		}
 		
 		// Parse body
-		this.body = rawRequest.substring(doubleCrlfIndex);
+		this.body = rawRequest.substring(doubleCrlfIndex + (CRLF.length() * 2));
 		if (this.body.isEmpty()) {
 			this.body = null;
-		} else {
-			this.body = this.body.trim();
 		}
 	}
 	
