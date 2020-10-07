@@ -38,6 +38,8 @@ public class HttpRequest {
 		this.body = rawRequest.substring(doubleCrlfIndex);
 		if (this.body.isEmpty()) {
 			this.body = null;
+		} else {
+			this.body = this.body.trim();
 		}
 	}
 	
