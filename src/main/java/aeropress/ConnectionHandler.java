@@ -62,13 +62,14 @@ public class ConnectionHandler implements Runnable {
 		HttpResponse res = null;
 		boolean matched = false;
 		for (String pathTemplate : routes.keySet()) {
-			PathParser.ParseResult parseResult = PathParser.parse(request.getUrl(), pathTemplate);
+			PathParser.ParseResult parseResult = PathParser.parse(request.getUri().getPath(), pathTemplate);
 			if (parseResult.matches()) {
 				matched = true;
+				request.setPathParams(parseResult.pathParams());
 				Map<HttpMethod, RequestHandler> methods = routes.get(pathTemplate);
 				RequestHandler handler = methods.get(request.getMethod());
 				if (handler != null) {
-					res = handler.handle(request, parseResult.params());
+					res = handler.handle(request);
 				} else {
 					res = HttpResponse.builder()
 							.status(HttpStatus.METHOD_NOT_ALLOWED)
@@ -76,6 +77,8 @@ public class ConnectionHandler implements Runnable {
 							.body("<h1>405 - Method Not Allowed</h1>")
 							.build();
 				}
+
+				break;
 			}
 		}
 		

@@ -1,5 +1,8 @@
 package aeropress;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -7,8 +10,10 @@ public class HttpRequest {
 	private static final String CRLF = "\r\n";
 	private final Map<String, String> headers = new HashMap<>();
 	private final HttpMethod method;
-	private final String url;
 	private final String protocolVersion;
+	private final Map<String, String> queryParams = new HashMap<>();
+	private Map<String, String> pathParams = new HashMap<>();
+	private URI uri;
 	private String body;
 
 	public HttpRequest(String rawRequest) throws ParseException {
@@ -29,7 +34,7 @@ public class HttpRequest {
 			throw new ParseException("Expected 3 fields in request line of the form 'method url protocol-version' and only found " + fields.length + " fields");
 		}
 		this.method = HttpMethod.valueOf(fields[0]);
-		this.url = fields[1];
+		parseUri(fields[1]);
 		this.protocolVersion = fields[2];
 		
 		// Parse headers
@@ -48,6 +53,21 @@ public class HttpRequest {
 			this.body = null;
 		}
 	}
+
+	private void parseUri(String rawUri) throws ParseException {
+		try {
+			this.uri = new URI(rawUri);
+		} catch (URISyntaxException e) {
+			throw new ParseException(e);
+		}
+
+		if (uri.getQuery() != null) {
+			for (String param : this.uri.getQuery().split("&")) {
+				String[] pair = param.split("=");
+				queryParams.put(pair[0], pair[1]);
+			}
+		}
+	}
 	
 	public String getHeader(String name) {
 		return headers.get(name);
@@ -57,8 +77,12 @@ public class HttpRequest {
 		return method;
 	}
 	
-	public String getUrl() {
-		return url;
+	public URI getUri() {
+		return uri;
+	}
+
+	public Map<String, String> getQueryParams() {
+		return queryParams;
 	}
 	
 	public String getProtocolVersion() {
@@ -68,11 +92,20 @@ public class HttpRequest {
 	public String getBody() {
 		return body;
 	}
+
+	public Map<String, String> getPathParams() {
+		return pathParams;
+	}
+
+	protected void setPathParams(Map<String, String> pathParams) {
+		this.pathParams = pathParams;
+	}
+
 	
 	@Override
 	public String toString() {
 		return String.format("Method: %s\nURL: %s\nProtocol version: %s\n"
-				+ "Headers: %s\nBody: %s", method, url, protocolVersion, headers.toString(), body);
+				+ "Headers: %s\nBody: %s", method, uri.toString(), protocolVersion, headers.toString(), body);
 	}
 	
 }

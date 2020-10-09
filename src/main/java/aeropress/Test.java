@@ -1,6 +1,10 @@
 package aeropress;
 
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Test {
 	private static final String HTML = 
@@ -11,36 +15,40 @@ public class Test {
 			"</body>\r\n" + 
 			"</html>";
 	
-	public static void main(String[] args) throws IOException, InterruptedException {
+	public static void main(String[] args) throws IOException, InterruptedException, ParseException {
 		Aeropress app = Aeropress.builder()
-										.get("/api/:name", (req, pathParams) -> {
+										.get("/api/:name", req -> {
 											return HttpResponse.builder()
 											.status(HttpStatus.OK)
 											.header("Content-Type", "text/html")
-											.body(HTML.replace("{}", pathParams.get("name")))
+											.body(HTML.replace("{}", req.getPathParams().get("name")))
 											.build();
 										})
-										.get("/api/:id/test", (req, pathParams) -> {
+										.get("/api/:id/test", req -> {
 											return HttpResponse.builder()
 													.status(HttpStatus.OK)
-													.body(String.format("You got ID #%s", pathParams.get("id")))
+													.body(String.format("You got ID #%s", req.getPathParams().get("id")))
 													.build();
 										})
-										.post("/api", (req, pathParams) -> {
+										.post("/api", req -> {
 											return HttpResponse.builder()
 													.status(HttpStatus.OK)
 													.header("Content-Type", "text/html")
 													.body(HTML.replace("{}", req.getBody()))
 													.build();
 										})
-										.get("/api", (req, pathParams) -> {
+										.post("/postOnly", req -> {
+											return HttpResponse.builder().status(HttpStatus.OK).build();
+										})
+										.get("/api", req -> {
 											return HttpResponse.builder()
 													.status(HttpStatus.OK)
 													.body("<h1>It's all good!</h1>")
 													.build();
 										})
 										.build();
-		
+
 		app.start(8086);
+		//parseUri("https://www.geeksforgeeks.org/url-getprotocol-method-in-java-with-examples?title=protocol%E2%82%AC&second=secondParam");
 	}
 }

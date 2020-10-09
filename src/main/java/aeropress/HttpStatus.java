@@ -1,7 +1,7 @@
 package aeropress;
 
 public enum HttpStatus {
-	OK("Ok", 200),
+	OK("OK", 200),
 	BAD_REQUEST("Bad Request", 400),
 	NOT_FOUND("Not Found", 404),
 	METHOD_NOT_ALLOWED("Method Not Allowed", 405);
