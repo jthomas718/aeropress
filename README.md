@@ -16,16 +16,16 @@ String html =
     "</html>";
 
 Aeropress app = Aeropress.builder()
-                .get("/api/:name", params -> {
+                .get("/api/:name" -> {
                   return HttpResponse.builder()
                   .status(HttpStatus.OK)
                   .header("Content-Type", "text/html")
-                  .body(html.replace("{}", params.get("name")))
+                  .body(html.replace("{}", req.getPathParams.get("name")))
                   .build();
                 })
                 .build();
 ```
-This builds the Aeropress app and maps the URL (along with path parameters) to the specified handler. The path parameters can be accessed via the 'params' map that's injected into the handler. The HttpResponse class also has a builder for creating immutable HTTP responses. Any responses returned by the handler will be written to the response stream.
+This builds the Aeropress app and maps the URL to the specified handler. The path parameters (and other values) can be accessed via the request that's injected into the handler. The HttpResponse class also has a builder for creating immutable HTTP responses. Any responses returned by the handler will be written to the response stream.
 
 After building, you can start the Aeropress server on any port:
 
