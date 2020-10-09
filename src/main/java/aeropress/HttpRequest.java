@@ -64,6 +64,9 @@ public class HttpRequest {
 		if (uri.getQuery() != null) {
 			for (String param : this.uri.getQuery().split("&")) {
 				String[] pair = param.split("=");
+				if (pair.length < 2) {
+					throw new ParseException("Malformed query in URI");
+				}
 				queryParams.put(pair[0], pair[1]);
 			}
 		}

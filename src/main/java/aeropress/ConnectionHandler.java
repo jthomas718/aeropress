@@ -32,6 +32,8 @@ public class ConnectionHandler implements Runnable {
 				System.out.print(request.toString());
 				routeRequest(request, socket.getOutputStream());
 			} catch (ParseException e) {
+				System.out.println("Invalid request");
+				e.printStackTrace();
 				sendResponse(HttpResponse.builder()
 									.status(HttpStatus.BAD_REQUEST)
 									.body("<h1>400 - Bad Request</h1><body>See server logs for more details</body>")

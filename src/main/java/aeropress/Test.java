@@ -43,7 +43,7 @@ public class Test {
 										.get("/api", req -> {
 											return HttpResponse.builder()
 													.status(HttpStatus.OK)
-													.body("<h1>It's all good!</h1>")
+													.body(HTML.replace("{}", req.getQueryParams().get("param")))
 													.build();
 										})
 										.build();
