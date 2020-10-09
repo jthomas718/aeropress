@@ -5,6 +5,8 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 public class Test {
 	private static final String HTML = 
@@ -17,6 +19,7 @@ public class Test {
 	
 	public static void main(String[] args) throws IOException, InterruptedException, ParseException {
 		Aeropress app = Aeropress.builder()
+										.executor(Executors.newFixedThreadPool(5))
 										.get("/api/:name", req -> {
 											return HttpResponse.builder()
 											.status(HttpStatus.OK)

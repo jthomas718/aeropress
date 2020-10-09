@@ -62,7 +62,7 @@ public class HttpRequest {
 		}
 
 		if (uri.getQuery() != null) {
-			for (String param : this.uri.getQuery().split("&")) {
+			for (String param : uri.getQuery().split("&")) {
 				String[] pair = param.split("=");
 				if (pair.length < 2) {
 					throw new ParseException("Malformed query in URI");
@@ -107,7 +107,7 @@ public class HttpRequest {
 	
 	@Override
 	public String toString() {
-		return String.format("Method: %s\nURL: %s\nProtocol version: %s\n"
+		return String.format("Method: %s\nURI: %s\nProtocol version: %s\n"
 				+ "Headers: %s\nBody: %s", method, uri.toString(), protocolVersion, headers.toString(), body);
 	}
 	

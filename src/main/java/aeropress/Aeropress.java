@@ -10,7 +10,7 @@ import java.util.concurrent.Executors;
 public class Aeropress {
 	private static final int DEFAULT_PORT = 8080;
 	private volatile boolean running = false;
-	private final ExecutorService threadPool = Executors.newCachedThreadPool();
+	private ExecutorService esvc = Executors.newCachedThreadPool();
 	private final Map<String, Map<HttpMethod, RequestHandler>> routes = new HashMap<>();
 	
 	private Aeropress() { }
@@ -33,7 +33,7 @@ public class Aeropress {
 		ServerSocket serverSocket = new ServerSocket(port);
 			while (running) {
 				Socket clientSocket = serverSocket.accept();
-				threadPool.execute(new ConnectionHandler(clientSocket, routes));
+				esvc.execute(new ConnectionHandler(clientSocket, routes));
 			}
 	}
 	
@@ -48,6 +48,11 @@ public class Aeropress {
 	
 	public static class Builder {
 		private final Aeropress app = new Aeropress();
+
+		public Builder executor(ExecutorService executorService) {
+			app.esvc = executorService;
+			return this;
+		}
 		
 		public Builder get(String pathTemplate, RequestHandler handler) {
 			app.registerHandler(pathTemplate, HttpMethod.GET, handler);
