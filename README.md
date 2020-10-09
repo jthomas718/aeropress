@@ -16,7 +16,7 @@ String html =
     "</html>";
 
 Aeropress app = Aeropress.builder()
-                .get("/api/:name" -> {
+                .get("/api/:name", req -> {
                   return HttpResponse.builder()
                   .status(HttpStatus.OK)
                   .header("Content-Type", "text/html")
