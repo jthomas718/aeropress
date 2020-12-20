@@ -24,13 +24,13 @@ public class Test {
 											return HttpResponse.builder()
 											.status(HttpStatus.OK)
 											.header("Content-Type", "text/html")
-											.body(HTML.replace("{}", req.getPathParams().get("name")))
+											.body(HTML.replace("{}", req.pathParams().get("name")))
 											.build();
 										})
 										.get("/api/:id/test", req -> {
 											return HttpResponse.builder()
 													.status(HttpStatus.OK)
-													.body(String.format("You got ID #%s", req.getPathParams().get("id")))
+													.body(String.format("You got ID #%s", req.pathParams().get("id")))
 													.build();
 										})
 										.post("/api", req -> {
@@ -46,7 +46,7 @@ public class Test {
 										.get("/api", req -> {
 											return HttpResponse.builder()
 													.status(HttpStatus.OK)
-													.body(HTML.replace("{}", req.getQueryParams().get("param")))
+													.body(HTML.replace("{}", req.queryParams().get("param")))
 													.build();
 										})
 										.build();

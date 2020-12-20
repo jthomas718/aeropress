@@ -84,7 +84,7 @@ public class HttpRequest {
 		return uri;
 	}
 
-	public Map<String, String> getQueryParams() {
+	public Map<String, String> queryParams() {
 		return queryParams;
 	}
 	
@@ -96,7 +96,7 @@ public class HttpRequest {
 		return body;
 	}
 
-	public Map<String, String> getPathParams() {
+	public Map<String, String> pathParams() {
 		return pathParams;
 	}
 

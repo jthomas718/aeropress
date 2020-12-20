@@ -20,7 +20,7 @@ Aeropress app = Aeropress.builder()
                   return HttpResponse.builder()
                   .status(HttpStatus.OK)
                   .header("Content-Type", "text/html")
-                  .body(html.replace("{}", req.getPathParams.get("name")))
+                  .body(html.replace("{}", req.pathParams().get("name")))
                   .build();
                 })
                 .build();
