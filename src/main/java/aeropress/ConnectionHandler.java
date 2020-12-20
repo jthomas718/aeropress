@@ -64,12 +64,12 @@ public class ConnectionHandler implements Runnable {
 		HttpResponse res = null;
 		boolean matched = false;
 		for (String pathTemplate : routes.keySet()) {
-			PathParser.ParseResult parseResult = PathParser.parse(request.getUri().getPath(), pathTemplate);
+			PathParser.ParseResult parseResult = PathParser.parse(request.uri().getPath(), pathTemplate);
 			if (parseResult.matches()) {
 				matched = true;
 				request.setPathParams(parseResult.pathParams());
 				Map<HttpMethod, RequestHandler> methods = routes.get(pathTemplate);
-				RequestHandler handler = methods.get(request.getMethod());
+				RequestHandler handler = methods.get(request.method());
 				if (handler != null) {
 					res = handler.handle(request);
 				} else {

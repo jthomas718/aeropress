@@ -72,15 +72,15 @@ public class HttpRequest {
 		}
 	}
 	
-	public String getHeader(String name) {
+	public String header(String name) {
 		return headers.get(name);
 	}
 	
-	public HttpMethod getMethod() {
+	public HttpMethod method() {
 		return method;
 	}
 	
-	public URI getUri() {
+	public URI uri() {
 		return uri;
 	}
 
@@ -88,11 +88,11 @@ public class HttpRequest {
 		return queryParams;
 	}
 	
-	public String getProtocolVersion() {
+	public String protocolVersion() {
 		return protocolVersion;
 	}
 	
-	public String getBody() {
+	public String body() {
 		return body;
 	}
 

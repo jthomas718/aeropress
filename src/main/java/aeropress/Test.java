@@ -37,7 +37,7 @@ public class Test {
 											return HttpResponse.builder()
 													.status(HttpStatus.OK)
 													.header("Content-Type", "text/html")
-													.body(HTML.replace("{}", req.getBody()))
+													.body(HTML.replace("{}", req.body()))
 													.build();
 										})
 										.post("/postOnly", req -> {
