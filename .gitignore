@@ -5,3 +5,7 @@
 build
 
 .idea
+.DS_store
+.classpath
+.project
+.settings/
